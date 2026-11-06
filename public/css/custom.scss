@@ -43,12 +43,12 @@ html, body {
 
 body {
   background-image:
-    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.6) 50%, transparent 51%),
-    radial-gradient(1px 1px at 68% 9%, rgba(255, 255, 255, 0.5) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 85% 42%, rgba(42, 216, 234, 0.66) 50%, transparent 51%),
-    radial-gradient(1px 1px at 33% 64%, rgba(255, 255, 255, 0.44) 50%, transparent 51%),
-    radial-gradient(1px 1px at 52% 88%, rgba(255, 255, 255, 0.39) 50%, transparent 51%),
-    radial-gradient(1.5px 1.5px at 7% 79%, rgba(34, 240, 122, 0.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.9) 50%, transparent 51%),
+    radial-gradient(1px 1px at 68% 9%, rgba(255, 255, 255, 0.8) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 85% 42%, rgba(200, 246, 251, 0.9) 50%, transparent 51%),
+    radial-gradient(1px 1px at 33% 64%, rgba(255, 255, 255, 0.75) 50%, transparent 51%),
+    radial-gradient(1px 1px at 52% 88%, rgba(255, 255, 255, 0.7) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 7% 79%, rgba(200, 251, 222, 0.85) 50%, transparent 51%),
     radial-gradient(ellipse at 50% -20%, #18284a 0%, var(--flapx-space) 60%);
   background-size: 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 100% 100%;
   background-attachment: fixed;
