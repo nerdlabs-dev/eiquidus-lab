@@ -153,7 +153,7 @@
     //             POW: Display the proof-of-work difficulty value
     //             POS: Display the proof-of-stake difficulty value
     //             Hybrid: Display both the proof-of-work and proof-of-stake difficulty values
-    "difficulty": "POW",
+    "difficulty": "Hybrid",
     // show_hashrate: Determine whether to show network hash rate where applicable (true/false)
     //                If set to false, the /api/getnetworkhashps and /ext/getsummary apis will no longer show hash rate information, and the network hashrate chart will automatically be disabled
     "show_hashrate": true,
@@ -370,7 +370,7 @@
             // color: Change the chart title text color
             //        Set this to any valid html color
             //        Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-            "color": "#666666",
+            "color": "#c9d4e3",
             // font: A collection of settings that pertain to the chart title font
             "font": {
               // family: The font to use for the chart title
@@ -395,19 +395,19 @@
           // bgcolor: Change the background color of the network hashrate chart
           //          Set this to any valid html color
           //          Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "bgcolor": "#ffffff",
+          "bgcolor": "",
           // line_color: Change the line color of the network hashrate chart
           //             Set this to any valid html color
           //             Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "line_color": "rgba(54, 162, 235, 1)",
+          "line_color": "rgba(42, 216, 234, 1)",
           // fill_color: Change the fill color of the network hashrate chart
           //             Set this to any valid html color
           //             Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "fill_color": "rgba(54, 162, 235, 0.2)",
+          "fill_color": "rgba(42, 216, 234, 0.15)",
           // crosshair_color: Change the vertical crosshair line color of the network hashrate chart
           //             Set this to any valid html color
           //             Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "crosshair_color": "#000000",
+          "crosshair_color": "#8a9bb8",
           // block_line: A collection of settings that pertain to the vertical block line on the network hashrate chart
           "block_line": {
             // enabled: Enable/disable the vertical block line (true/false)
@@ -417,7 +417,7 @@
             // block_line_color: Change the line color of the block data for the network hashrate chart
             //                   Set this to any valid html color
             //                   Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-            "block_line_color": "rgba(0, 128, 0, 0.2)"
+            "block_line_color": "rgba(42, 216, 234, 0.06)"
           },
           // round_decimals: Set how many decimal places the hash rates are rounded to (Max 20)
           //                 NOTE: Set to a value of -1 to output the raw value without rounding
@@ -465,7 +465,7 @@
             // color: Change the chart title text color
             //        Set this to any valid html color
             //        Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-            "color": "#666666",
+            "color": "#c9d4e3",
             // font: A collection of settings that pertain to the chart title font
             "font": {
               // family: The font to use for the chart title
@@ -490,27 +490,27 @@
           // bgcolor: Change the background color of the network difficulty chart
           //          Set this to any valid html color
           //          Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "bgcolor": "#ffffff",
+          "bgcolor": "",
           // pow_line_color: Change the line color of the network difficulty chart for POW coins
           //                 Set this to any valid html color
           //                 Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "pow_line_color": "rgba(255, 99, 132, 1)",
+          "pow_line_color": "rgba(34, 240, 122, 1)",
           // pow_fill_color: Change the fill color of the network difficulty chart for POW coins
           //                 Set this to any valid html color
           //                 Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "pow_fill_color": "rgba(255, 99, 132, 0.2)",
+          "pow_fill_color": "rgba(34, 240, 122, 0.15)",
           // pos_line_color: Change the line color of the network difficulty chart for POS coins
           //                 Set this to any valid html color
           //                 Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "pos_line_color": "rgba(255, 161, 0, 1)",
+          "pos_line_color": "rgba(201, 212, 227, 1)",
           // pos_fill_color: Change the fill color of the network difficulty chart for POS coins
           //                 Set this to any valid html color
           //                 Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "pos_fill_color": "rgba(255, 161, 0, 0.2)",
+          "pos_fill_color": "rgba(201, 212, 227, 0.15)",
           // crosshair_color: Change the vertical crosshair line color of the network difficulty chart
           //             Set this to any valid html color
           //             Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-          "crosshair_color": "#000000",
+          "crosshair_color": "#8a9bb8",
           // block_line: A collection of settings that pertain to the vertical block line on the network difficulty chart
           "block_line": {
             // enabled: Enable/disable the vertical block line (true/false)
@@ -520,7 +520,7 @@
             // block_line_color: Change the line color of the block data for the network difficulty chart
             //                   Set this to any valid html color
             //                   Ex: "#ffffff" or "rgba(255, 255, 255, 1)" or "white"
-            "block_line_color": "rgba(0, 128, 0, 0.2)"
+            "block_line_color": "rgba(42, 216, 234, 0.06)"
           },
           // round_decimals: Set how many decimal places the difficulty values are rounded to (Max 20)
           //                 NOTE: Set to a value of -1 to output the raw value without rounding
@@ -536,6 +536,21 @@
           //                 If set to true, the chart will take up the full available space inside the chart box
           //                 If set to false, there will be some padding on all 4 sides of the chart box
           "stretch_to_fit": false
+        },
+        // combined_chart: FlapX - show hashrate, PoW difficulty and PoS difficulty together in one full-width chart instead of two separate charts
+        //                 Used when both the nethash_chart and difficulty_chart would be shown on a page. Hashrate uses the left axis and difficulty uses the right axis.
+        //                 Line and fill colors, legend, crosshair and block line settings are taken from the nethash_chart and difficulty_chart settings above
+        "combined_chart": {
+          // enabled: Enable/disable the combined chart (true/false). If set to false, the two separate charts are shown instead
+          "enabled": true,
+          // chart_height: The height of the combined chart in pixels
+          "chart_height": 360,
+          // bgcolor: The background color of the chart area (leave blank for transparent)
+          "bgcolor": "",
+          // text_color: The color of the axis labels and legend text
+          "text_color": "#8a9bb8",
+          // grid_color: The color of the chart grid lines
+          "grid_color": "rgba(36, 52, 90, 0.7)"
         },
         // reload_chart_seconds: The time in seconds to automatically reload the network chart data from the server
         //                       Set to 0 to disable automatic reloading of chart data

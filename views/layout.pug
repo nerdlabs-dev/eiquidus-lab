@@ -165,6 +165,7 @@ html(lang='en')
     else
       - showNethashChart = false
       - showDifficultyChart = false
+    - var showCombinedChart = (showNethashChart == true && showDifficultyChart == true && settings.shared_pages.page_header.network_charts.combined_chart.enabled == true)
     if active == 'home' || active == 'address' || active == 'block' || active == 'markets' || active == 'masternodes' || active == 'movement' || active == 'network' || active == 'orphans' || active == 'reward' || active == 'richlist' || active == 'tx'
       include ./includes/common.pug
     if active == 'markets' || active == 'richlist' || active == 'reward' || showNethashChart == true || showDifficultyChart == true
@@ -509,6 +510,9 @@ html(lang='en')
 
               if (typeof populateDifficultyChart !== 'undefined' && typeof populateDifficultyChart === 'function')
                 populateDifficultyChart(result);
+
+              if (typeof populateNetworkChart !== 'undefined' && typeof populateNetworkChart === 'function')
+                populateNetworkChart(result);
             }
           });
         }
@@ -741,7 +745,7 @@ html(lang='en')
 
           update_network_charts();
         });
-    if showNethashChart == true
+    if showNethashChart == true && showCombinedChart != true
       script.
         let nethashChart;
 
@@ -881,7 +885,7 @@ html(lang='en')
             nethashChart.update('none');
           }
         }
-    if showDifficultyChart == true
+    if showDifficultyChart == true && showCombinedChart != true
       script.
         let difficultyChart;
 
@@ -1051,6 +1055,189 @@ html(lang='en')
             }
 
             difficultyChart.update('none');
+          }
+        }
+    if showCombinedChart == true
+      script.
+        // FlapX: one full-width chart with hashrate (left axis) and PoW + PoS difficulty (right axis)
+        let networkChart;
+
+        function populateNetworkChart(result) {
+          const ctxNetwork = document.getElementById('networkChart').getContext('2d');
+          const textColor = '#{settings.shared_pages.page_header.network_charts.combined_chart.text_color}';
+          const gridColor = '#{settings.shared_pages.page_header.network_charts.combined_chart.grid_color}';
+          let timeData = {};
+
+          if (maxSavedRecords == 0)
+            timeData = populateHourChartData(result);
+
+          const chartData = (maxSavedRecords == 0 ? timeData.hourData : result);
+          const toPoints = function(valueKey, formattedKey) {
+            return chartData.map(a => (maxSavedRecords == 0 ?
+              { x: a.tick, y: a[valueKey], blockindex: a.blockindex, formatted: a[formattedKey] } :
+              { x: a.blockindex, y: a[valueKey], formatted: a[formattedKey] }
+            ));
+          };
+
+          const networkDataSets = [
+            {
+              label: 'Hashrate',
+              yAxisID: 'y',
+              data: toPoints('nethash', 'nethashFixed'),
+              backgroundColor: '#{settings.shared_pages.page_header.network_charts.nethash_chart.fill_color}',
+              borderColor: '#{settings.shared_pages.page_header.network_charts.nethash_chart.line_color}',
+              borderWidth: 2,
+              fill: 'start',
+              order: 3
+            },
+            {
+              label: 'POW Difficulty',
+              yAxisID: 'y1',
+              data: toPoints('difficulty_pow', 'difficultyPowFixed'),
+              backgroundColor: '#{settings.shared_pages.page_header.network_charts.difficulty_chart.pow_fill_color}',
+              borderColor: '#{settings.shared_pages.page_header.network_charts.difficulty_chart.pow_line_color}',
+              borderWidth: 2,
+              fill: false,
+              order: 2
+            },
+            {
+              label: 'POS Difficulty',
+              yAxisID: 'y1',
+              data: toPoints('difficulty_pos', 'difficultyPosFixed'),
+              backgroundColor: '#{settings.shared_pages.page_header.network_charts.difficulty_chart.pos_fill_color}',
+              borderColor: '#{settings.shared_pages.page_header.network_charts.difficulty_chart.pos_line_color}',
+              borderWidth: 2,
+              fill: false,
+              order: 1
+            }
+          ];
+
+          const pluginData = {
+            title: { display: false },
+            legend: {
+              display: #{settings.shared_pages.page_header.network_charts.nethash_chart.legend.enabled},
+              position: '#{settings.shared_pages.page_header.network_charts.nethash_chart.legend.position}',
+              labels: {
+                color: textColor,
+                usePointStyle: true,
+                pointStyle: 'line'
+              }
+            },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              displayColors: true,
+              callbacks: {
+                title: function(context) {
+                  if (maxSavedRecords == 0)
+                    return format_unixtime(Math.floor(context[0].parsed.x / 1000));
+                  else
+                    return 'Block ' + context[0].label;
+                },
+                label: function(context) {
+                  return context.dataset.label + ': ' + context.raw.formatted;
+                },
+                afterLabel: function(context) {
+                  if (maxSavedRecords == 0) {
+                    const tooltipItems = context.chart.tooltip.dataPoints;
+                    const isLastVisibleItem = tooltipItems[tooltipItems.length - 1] === context;
+
+                    // only display blockindex if this is the last visible tooltip item
+                    if (isLastVisibleItem) {
+                      const blockindex = context.raw.blockindex;
+
+                      if (blockindex && blockindex !== 0)
+                        return `Block: ${blockindex}`;
+                    }
+                  }
+
+                  return '';
+                }
+              }
+            },
+            crosshair: {
+              line: {
+                color: '#{settings.shared_pages.page_header.network_charts.nethash_chart.crosshair_color}',
+                width: 1
+              },
+              sync: {
+                enabled: false
+              },
+              zoom: {
+                enabled: false
+              }
+            },
+            annotation: populateBlockIndexAnnotations(timeData.hourData, !{JSON.stringify(settings.shared_pages.page_header.network_charts.nethash_chart.block_line)})
+          };
+
+          const axisTitle = function(text) {
+            return { display: true, text: text, color: textColor, font: { weight: 'bold' } };
+          };
+
+          if (networkChart == null) {
+            networkChart = new Chart(ctxNetwork, {
+              type: 'line',
+              data: {
+                labels: (maxSavedRecords == 0 ? timeData.hourData.map(function(a) {return a.tick;}) : result.map(function(a) {return a.blockindex;})),
+                datasets: networkDataSets
+              },
+              options: {
+                maintainAspectRatio: false,
+                interaction: {
+                  mode: 'index',
+                  intersect: false
+                },
+                elements: {
+                  point: {
+                    radius: 0,
+                    hoverRadius: 4
+                  },
+                  line: {
+                    tension: 0.2
+                  }
+                },
+                scales: {
+                  x: {
+                    ticks: { color: textColor },
+                    grid: { color: gridColor }
+                  },
+                  y: {
+                    position: 'left',
+                    title: axisTitle('Hashrate ' + getNetHashUnits()),
+                    ticks: { color: textColor },
+                    grid: { color: gridColor }
+                  },
+                  y1: {
+                    position: 'right',
+                    title: axisTitle('Difficulty'),
+                    ticks: { color: textColor },
+                    grid: { drawOnChartArea: false }
+                  }
+                },
+                plugins: pluginData
+              }
+            });
+
+            if (maxSavedRecords == 0) {
+              networkChart.options.scales.x = Object.assign({}, timeData.xScale, {
+                grid: { color: gridColor },
+                ticks: Object.assign({}, timeData.xScale.ticks, { color: textColor })
+              });
+            }
+
+            networkChart.update('none');
+            $('#networkChartParent').fadeIn();
+          } else {
+            networkChart.data.labels = (maxSavedRecords == 0 ? timeData.hourData.map(function(a) {return a.tick;}) : result.map(function(a) {return a.blockindex;}));
+            networkChart.data.datasets = networkDataSets;
+            networkChart.options.plugins = pluginData;
+
+            if (maxSavedRecords == 0) {
+              networkChart.options.scales.x.min = timeData.minTimestamp;
+              networkChart.options.scales.x.max = timeData.maxTimestamp;
+            }
+
+            networkChart.update('none');
           }
         }
     if (showPanels == true && showNetworkPanel == true) || showNethashChart == true || showDifficultyChart == true
@@ -1695,7 +1882,9 @@ html(lang='en')
             - var chartColumnClass = 'col-lg-12';
             .container(style='padding-left:0;padding-right:0;')
               .row.align-items-start
-                if showNethashChart == true && showDifficultyChart == true && settings.shared_pages.page_header.network_charts.nethash_chart.full_row == false && settings.shared_pages.page_header.network_charts.difficulty_chart.full_row == false
+                if showCombinedChart == true
+                  include ./includes/network_chart.pug
+                else if showNethashChart == true && showDifficultyChart == true && settings.shared_pages.page_header.network_charts.nethash_chart.full_row == false && settings.shared_pages.page_header.network_charts.difficulty_chart.full_row == false
                   - chartColumnClass = 'col-lg-6';
                   include ./includes/nethash_chart.pug
                   include ./includes/difficulty_chart.pug
@@ -1703,7 +1892,7 @@ html(lang='en')
                   include ./includes/nethash_chart.pug
                 else if showDifficultyChart == true
                   include ./includes/difficulty_chart.pug
-            if showNethashChart == true && showDifficultyChart == true && (settings.shared_pages.page_header.network_charts.nethash_chart.full_row == true || settings.shared_pages.page_header.network_charts.difficulty_chart.full_row == true)
+            if showCombinedChart != true && showNethashChart == true && showDifficultyChart == true && (settings.shared_pages.page_header.network_charts.nethash_chart.full_row == true || settings.shared_pages.page_header.network_charts.difficulty_chart.full_row == true)
               .container(style='padding-left:0;padding-right:0;')
                 .row.align-items-start
                   include ./includes/difficulty_chart.pug
