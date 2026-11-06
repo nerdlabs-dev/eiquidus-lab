@@ -1,1 +1,358 @@
-/* Add custom css rules here */
+/*
+  FlapX explorer theme
+  Loads after the base theme (set "shared_pages.theme" to "Darkly").
+  Palette is taken from the FlapX wallet artwork:
+    cyan  - the bird            mint  - the beak
+    steel - the rocket stripes  silver/white - helmet and rocket body
+  Written as plain CSS so it compiles with any Sass version.
+*/
+
+:root {
+  --flapx-space:        #0b1220;
+  --flapx-space-2:      #111a2e;
+  --flapx-panel:        #15203a;
+  --flapx-panel-hover:  #1b2848;
+  --flapx-border:       #24345a;
+  --flapx-cyan:         #2ad8ea;
+  --flapx-mint:         #22f07a;
+  --flapx-steel:        #5a9ab8;
+  --flapx-silver:       #c9d4e3;
+  --flapx-text:         #e6edf7;
+  --flapx-muted:        #8a9bb8;
+
+  --bs-body-bg:         var(--flapx-space);
+  --bs-body-color:      var(--flapx-text);
+  --bs-border-color:    var(--flapx-border);
+  --bs-link-color:      var(--flapx-cyan);
+  --bs-link-hover-color: var(--flapx-mint);
+  --bs-primary:         #2ad8ea;
+  --bs-primary-rgb:     42, 216, 234;
+  --bs-success:         #22f07a;
+  --bs-success-rgb:     34, 240, 122;
+  --bs-info:            #5a9ab8;
+  --bs-info-rgb:        90, 154, 184;
+}
+
+/* ---------- page background: deep space with a faint starfield ---------- */
+
+html, body {
+  background-color: var(--flapx-space);
+  color: var(--flapx-text);
+}
+
+body {
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.55) 50%, transparent 51%),
+    radial-gradient(1px 1px at 68% 9%, rgba(255, 255, 255, 0.45) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 85% 42%, rgba(42, 216, 234, 0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 33% 64%, rgba(255, 255, 255, 0.4) 50%, transparent 51%),
+    radial-gradient(1px 1px at 52% 88%, rgba(255, 255, 255, 0.35) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 7% 79%, rgba(34, 240, 122, 0.5) 50%, transparent 51%),
+    radial-gradient(ellipse at 50% -20%, #18284a 0%, var(--flapx-space) 60%);
+  background-size: 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 420px 420px, 100% 100%;
+  background-attachment: fixed;
+}
+
+a, a:link, a:visited {
+  color: var(--flapx-cyan);
+  text-decoration: none;
+}
+
+a:hover, a:focus, a:active {
+  color: var(--flapx-mint);
+}
+
+::selection {
+  background: rgba(42, 216, 234, 0.35);
+  color: #ffffff;
+}
+
+/* ---------- header / menu ---------- */
+
+.navbar, #main-header, .side-header, #side-offcanvas, .offcanvas {
+  background-color: rgba(11, 18, 32, 0.92) !important;
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--flapx-border);
+}
+
+.side-header, #side-offcanvas {
+  border-bottom: 0;
+  border-right: 1px solid var(--flapx-border);
+}
+
+.navbar .nav-link, .side-nav .nav-link {
+  color: var(--flapx-silver) !important;
+  border-radius: 6px;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.navbar .nav-link:hover, .navbar .nav-link:focus,
+.side-nav .nav-link:hover, .side-nav .nav-link:focus {
+  color: var(--flapx-cyan) !important;
+  background-color: rgba(42, 216, 234, 0.08);
+}
+
+.navbar .nav-item.active > .nav-link,
+.navbar .nav-link.active,
+.side-nav .nav-link.active {
+  color: var(--flapx-space) !important;
+  background: linear-gradient(90deg, var(--flapx-cyan), var(--flapx-mint));
+  font-weight: 600;
+}
+
+.navbar .nav-item.active .nav-icon,
+.side-nav .nav-link.active .nav-icon {
+  color: var(--flapx-space) !important;
+}
+
+.nav-icon {
+  color: var(--flapx-steel);
+}
+
+.navbar-brand img, .logo-main {
+  filter: drop-shadow(0 0 8px rgba(42, 216, 234, 0.35));
+}
+
+/* ---------- cards & panels ---------- */
+
+.card, .card-default {
+  background-color: var(--flapx-panel);
+  border: 1px solid var(--flapx-border) !important;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+.card-header {
+  background: linear-gradient(90deg, rgba(42, 216, 234, 0.14), rgba(34, 240, 122, 0.06)) !important;
+  border-bottom: 1px solid var(--flapx-border) !important;
+  color: var(--flapx-text);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.card-body {
+  background-color: var(--flapx-panel);
+  color: var(--flapx-text);
+}
+
+.header-panel, .header-panel .card {
+  border-top: 2px solid var(--flapx-cyan) !important;
+}
+
+.header-panel .card-header {
+  color: var(--flapx-muted);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.header-panel .card-body {
+  color: #ffffff;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+/* ---------- tables ---------- */
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--flapx-text);
+  --bs-table-striped-bg: rgba(255, 255, 255, 0.025);
+  --bs-table-striped-color: var(--flapx-text);
+  --bs-table-hover-bg: rgba(42, 216, 234, 0.08);
+  --bs-table-hover-color: #ffffff;
+  --bs-table-border-color: var(--flapx-border);
+  color: var(--flapx-text);
+  border-color: var(--flapx-border);
+}
+
+.table > thead > tr > th, .table thead th {
+  background-color: var(--flapx-space-2) !important;
+  color: var(--flapx-steel) !important;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--flapx-border) !important;
+}
+
+.table > :not(:first-child), .table-group-divider {
+  border-top: 1px solid var(--flapx-cyan) !important;
+}
+
+.table-bordered, .table-bordered > :not(caption) > * > * {
+  border-color: var(--flapx-border) !important;
+}
+
+/* ---------- forms & search ---------- */
+
+.form-control, .form-select, input[type="search"], .dataTables_filter input, .dataTables_length select {
+  background-color: var(--flapx-space-2) !important;
+  color: var(--flapx-text) !important;
+  border: 1px solid var(--flapx-border) !important;
+  border-radius: 8px;
+}
+
+.form-control:focus, .form-select:focus, input[type="search"]:focus {
+  border-color: var(--flapx-cyan) !important;
+  box-shadow: 0 0 0 0.2rem rgba(42, 216, 234, 0.25) !important;
+}
+
+.form-control::placeholder {
+  color: var(--flapx-muted);
+}
+
+/* ---------- buttons ---------- */
+
+.btn-primary, .btn-success {
+  background: linear-gradient(90deg, var(--flapx-cyan), var(--flapx-mint));
+  border: 0;
+  color: var(--flapx-space) !important;
+  font-weight: 600;
+}
+
+.btn-primary:hover, .btn-primary:focus,
+.btn-success:hover, .btn-success:focus {
+  filter: brightness(1.1);
+  color: var(--flapx-space) !important;
+}
+
+.btn-outline-primary, .btn-default, .btn-secondary {
+  background-color: transparent;
+  border: 1px solid var(--flapx-cyan);
+  color: var(--flapx-cyan);
+}
+
+.btn-outline-primary:hover, .btn-default:hover, .btn-secondary:hover {
+  background-color: rgba(42, 216, 234, 0.12);
+  color: #ffffff;
+}
+
+/* ---------- pagination ---------- */
+
+.pagination .page-link, .dataTables_paginate .page-link {
+  background-color: var(--flapx-space-2);
+  border-color: var(--flapx-border);
+  color: var(--flapx-cyan);
+}
+
+.pagination .page-item.active .page-link, .dataTables_paginate .page-item.active .page-link {
+  background: linear-gradient(90deg, var(--flapx-cyan), var(--flapx-mint));
+  border-color: transparent;
+  color: var(--flapx-space);
+  font-weight: 600;
+}
+
+.pagination .page-item.disabled .page-link {
+  background-color: var(--flapx-space);
+  color: var(--flapx-muted);
+}
+
+.dataTables_info, .dataTables_length, .dataTables_filter {
+  color: var(--flapx-muted) !important;
+}
+
+/* ---------- badges & status colours ---------- */
+
+.badge.bg-primary, .badge.text-bg-primary {
+  background-color: var(--flapx-cyan) !important;
+  color: var(--flapx-space) !important;
+}
+
+.badge.bg-success, .badge.text-bg-success, .text-bg-success {
+  background-color: var(--flapx-mint) !important;
+  color: var(--flapx-space) !important;
+}
+
+.badge.bg-info, .badge.text-bg-info {
+  background-color: var(--flapx-steel) !important;
+}
+
+.text-success {
+  color: var(--flapx-mint) !important;
+}
+
+.text-primary {
+  color: var(--flapx-cyan) !important;
+}
+
+.text-muted {
+  color: var(--flapx-muted) !important;
+}
+
+/* ---------- tabs ---------- */
+
+.nav-tabs {
+  border-bottom-color: var(--flapx-border);
+}
+
+.nav-tabs .nav-link {
+  color: var(--flapx-silver);
+}
+
+.nav-tabs .nav-link.active {
+  background-color: var(--flapx-panel);
+  border-color: var(--flapx-border) var(--flapx-border) var(--flapx-panel);
+  color: var(--flapx-cyan);
+}
+
+/* ---------- tooltips & dropdowns ---------- */
+
+.tooltip-inner {
+  background-color: var(--flapx-space-2);
+  border: 1px solid var(--flapx-cyan);
+  color: var(--flapx-text);
+}
+
+.dropdown-menu {
+  background-color: var(--flapx-panel);
+  border: 1px solid var(--flapx-border);
+}
+
+.dropdown-item {
+  color: var(--flapx-text);
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: rgba(42, 216, 234, 0.12);
+  color: var(--flapx-cyan);
+}
+
+/* ---------- footer ---------- */
+
+.footer, #footer-container {
+  background-color: rgba(11, 18, 32, 0.95) !important;
+  border-top: 1px solid var(--flapx-border);
+  color: var(--flapx-muted);
+}
+
+.footer .social-link, .footer a {
+  color: var(--flapx-silver);
+}
+
+.footer .social-link:hover, .footer a:hover {
+  color: var(--flapx-cyan);
+}
+
+/* ---------- scrollbars ---------- */
+
+* {
+  scrollbar-color: var(--flapx-border) var(--flapx-space);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--flapx-space);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--flapx-border);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--flapx-steel);
+}
